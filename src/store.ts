@@ -1,6 +1,7 @@
 import {initializeApp} from "firebase/app";
 import {arrayUnion, doc, getFirestore, updateDoc} from 'firebase/firestore';
 import {getAnalytics} from "firebase/analytics";
+import {sleep} from "./utils";
 
 let stocksEyesStore: any;
 let stocksEyesApp
@@ -24,11 +25,21 @@ export const initialiseStocksEyes = (config: any) => {
     analytics = getAnalytics(stocksEyesApp);
 }
 
-export const addSubscription = async (instrumentTokens: string[]) => {
+export const addSubscription = async (instrumentTokens: string[], retries = 0) => {
+    if(retries > 20) {
+        console.log("Can't add subscription, please contact the StocksEyes API admin")
+    }
     const subscriptionRef = doc(stocksEyesStore, "marketDataConfig", "subscribedInstruments");
-    await updateDoc(subscriptionRef, {
-        instrument_tokens: arrayUnion(...instrumentTokens)
-    });
+    try {
+        await updateDoc(subscriptionRef, {
+            instrument_tokens: arrayUnion(...instrumentTokens)
+        });
+    } catch (e) {
+        console.log("Subscription addition failed, Retrying...")
+        await sleep(retries * 1000);
+        await addSubscription(instrumentTokens, retries + 1);
+    }
+
 }
 
 // export const ticker = (instrumentTokens: string[] , fieldsRequired: Fields[] , callback: (data: MarketData[])=>void): Unsubscribe => {
