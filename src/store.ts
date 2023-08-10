@@ -17,8 +17,9 @@ const getStocksEyesConfig = (config: any): any => {
     }
 }
 
-export const initialiseStocksEyes = (config: any) => {
+export const initialiseStocksEyes = (apiKey: any) => {
     if (stocksEyesStore) return;
+    const config = JSON.parse(atob(apiKey));
     stocksEyesConfig = getStocksEyesConfig(config);
     stocksEyesApp = initializeApp(stocksEyesConfig);
     stocksEyesStore = getFirestore(stocksEyesApp)

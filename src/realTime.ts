@@ -31,8 +31,8 @@ export const subscribeRealTimeData = (instrumentTokens: string[], fieldsRequired
     return unsubscribe;
 }
 
-export const initialiseAndSubscribeRealTimeData = (config:any, instrumentTokens: string[], fieldsRequired:Fields[] , callback: (data: MarketData[])=>void): Unsubscribe => {
-    initialiseStocksEyes(config)
+export const initialiseAndSubscribeRealTimeData = (apiKey:any, instrumentTokens: string[], fieldsRequired:Fields[] , callback: (data: MarketData[])=>void): Unsubscribe => {
+    initialiseStocksEyes(apiKey)
     return subscribeRealTimeData(instrumentTokens, fieldsRequired, callback)
 }
 
