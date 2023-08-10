@@ -6,7 +6,7 @@ import {sendAnalyticsEvent} from "./analytics";
 
 export const subscribeRealTimeData = (instrumentTokens: string[], fieldsRequired:Fields[] , callback: (data: MarketData[])=>void): Unsubscribe => {
     addSubscription(instrumentTokens);
-    const q = query(collection(stocksEyesStore, "latestQuote"), where("instrument_token", "in", instrumentTokens));
+    const q = query(collection(stocksEyesStore, "latestQuoteByIT"), where("instrument_token", "in", instrumentTokens));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
         const newData: MarketData[] = [];
         querySnapshot.forEach((doc) => {

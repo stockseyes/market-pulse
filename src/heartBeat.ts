@@ -20,7 +20,8 @@ const setHeartBeatTime = async (appId: string) => {
 
 const sendHeartBeat = async (instrumentTokes: number[], appId: string, retries=0) => {
     if(retries > 20) return
-    const heartBeatUpdateRef = doc(stocksEyesStore, 'apps', appId, "heartBeats", "beats");
+    console.log(appId);
+    const heartBeatUpdateRef = doc(stocksEyesStore,  "heartBeats", "beats");
     const patchObject: {[key: number]: number} = {};
     const currentTime = Date.now() as number;
     instrumentTokes.forEach(instrumentToken => {
