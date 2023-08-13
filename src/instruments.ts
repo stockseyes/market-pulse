@@ -20,8 +20,6 @@ export interface SearchInstrumentsRequest {
 }
 
 export const searchInstruments = async (searchInstrumentsRequest: SearchInstrumentsRequest): Promise<Instrument[]> => {
-    const url = atob(ApiKey)
-    console.log("URL: " + url)
     // TODO: explore authenticated invocations
     const response = await makePostRequest(atob(ApiKey) + "/searchInstruments", {filterRequest :searchInstrumentsRequest});
     return response as Instrument[];
