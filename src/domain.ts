@@ -37,6 +37,23 @@ interface DepthData {
     sell?: Depth[];
 }
 
+
+export interface Instrument {
+    instrument_token: string;
+    exchange_token: string;
+    tradingsymbol: string;
+    name: string;
+    last_price: string;
+    expiry: string;
+    strike: string;
+    tick_size: string;
+    lot_size: string;
+    instrument_type: string;
+    segment: string;
+    exchange: string;
+}
+
+
 export interface MarketData {
     tradable?: boolean;
     mode?: string;

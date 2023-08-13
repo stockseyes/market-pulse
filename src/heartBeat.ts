@@ -26,6 +26,7 @@ const sendHeartBeat = async (instrumentTokes: number[], appId: string, retries=0
     const currentTime = Date.now() as number;
     instrumentTokes.forEach(instrumentToken => {
         patchObject[instrumentToken] = currentTime;
+        lastHeartBeat[instrumentToken] = currentTime;
     })
     try {
         await setDoc(heartBeatUpdateRef, patchObject, {merge: true});
@@ -41,10 +42,13 @@ const sendHeartBeat = async (instrumentTokes: number[], appId: string, retries=0
 export const sendTimelyHeartbeat = async (data: MarketData[]) => {
     let appId = stocksEyesConfig.appId
     if(!heartBeatConfig) await setHeartBeatTime(appId);
+    console.log(heartBeatConfig)
     let currentTime = Date.now();
     let instrumentTokensForHeartBeat: number[] = [];
     for (const row of data) {
         let instrumentToken: number = row.instrument_token
+        console.log(currentTime + " , " +  lastHeartBeat[instrumentToken])
+
         // check last hearBeatTime and current time diff
         if(!lastHeartBeat[instrumentToken] || (currentTime - lastHeartBeat[instrumentToken]) > heartBeatConfig.timeInterval) {
             // add for heartbeat to be sent
