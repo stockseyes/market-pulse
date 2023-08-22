@@ -2,6 +2,8 @@ import {initializeApp} from "firebase/app";
 import {arrayUnion, doc, getFirestore, updateDoc} from 'firebase/firestore';
 import {getAnalytics} from "firebase/analytics";
 import {sleep} from "./utils";
+import {getAuth, signInAnonymously} from "firebase/auth";
+import {initializeAppCheck, ReCaptchaV3Provider} from "firebase/app-check";
 
 let stocksEyesStore: any;
 let stocksEyesApp
@@ -17,17 +19,24 @@ const getStocksEyesConfig = (config: any): any => {
     }
 }
 
-export const initialiseStocksEyes = (apiKey: any) => {
+export const initialiseStocksEyes = async (apiKey: any) => {
     if (stocksEyesStore) return;
     const config = JSON.parse(atob(apiKey));
     stocksEyesConfig = getStocksEyesConfig(config);
     stocksEyesApp = initializeApp(stocksEyesConfig);
     stocksEyesStore = getFirestore(stocksEyesApp)
     analytics = getAnalytics(stocksEyesApp);
+    const auth = getAuth();
+    initializeAppCheck(stocksEyesApp, {
+        // provider: new ReCaptchaV3Provider("6LfkFLwnAAAAAILiEbF61R_lGTho8zp-rbRZNx0f"),
+        provider: new ReCaptchaV3Provider("6Ldsar8nAAAAAFv3-SffIOVhP-OEfnATcykrmgaD"),
+        isTokenAutoRefreshEnabled: true
+    });
+    await signInAnonymously(auth)
 }
 
 export const addSubscription = async (instrumentTokens: string[], retries = 0) => {
-    if(retries > 20) {
+    if (retries > 20) {
         console.log("Can't add subscription, please contact the StocksEyes API admin")
     }
     const subscriptionRef = doc(stocksEyesStore, "marketDataConfig", "subscribedInstruments");
