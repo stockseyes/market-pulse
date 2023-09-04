@@ -1,5 +1,5 @@
 import {addSubscription, initialiseStocksEyes, stocksEyesStore} from "./store";
-import {Fields, MarketData, Unsubscribe} from "./domain";
+import {Fields, MarketData, StocksEyesEnvironment, Unsubscribe} from "./domain";
 import {collection, onSnapshot, query, where} from "firebase/firestore";
 import {sendTimelyHeartbeat} from "./heartBeat";
 import {sendAnalyticsEvent} from "./analytics";
@@ -35,8 +35,8 @@ export const subscribeRealTimeData = async (instrumentTokens: string[], fieldsRe
     return unsubscribe;
 }
 
-export const initialiseAndSubscribeRealTimeData = async (apiKey:any, instrumentTokens: string[], fieldsRequired:Fields[] , callback: (data: MarketData[])=>void): Promise<Unsubscribe> => {
-    await initialiseStocksEyes(apiKey)
+export const initialiseAndSubscribeRealTimeData = async (environment: StocksEyesEnvironment, apiKey:any, instrumentTokens: string[], fieldsRequired:Fields[] , callback: (data: MarketData[])=>void): Promise<Unsubscribe> => {
+    await initialiseStocksEyes(apiKey, environment)
     return subscribeRealTimeData(instrumentTokens, fieldsRequired, callback)
 }
 

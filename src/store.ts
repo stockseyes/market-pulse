@@ -1,9 +1,10 @@
 import {initializeApp} from "firebase/app";
-import {arrayUnion, doc, getFirestore, updateDoc} from 'firebase/firestore';
+import {arrayUnion, doc, getDoc, getFirestore, updateDoc} from 'firebase/firestore';
 import {getAnalytics} from "firebase/analytics";
 import {sleep} from "./utils";
-import {getAuth, signInAnonymously} from "firebase/auth";
+import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
 import {initializeAppCheck, ReCaptchaV3Provider} from "firebase/app-check";
+import {StocksEyesEnvironment} from "./domain";
 
 let stocksEyesStore: any;
 let stocksEyesApp
@@ -19,20 +20,58 @@ const getStocksEyesConfig = (config: any): any => {
     }
 }
 
-export const initialiseStocksEyes = async (apiKey: any) => {
+
+const signIn = (userName: string, password: string) => {
+    return new Promise((resolve, reject) => {
+        const auth = getAuth();
+        signInWithEmailAndPassword(auth, userName, password)
+            .then((userCredential) => {
+                // Signed in
+                const user = userCredential.user;
+                resolve(user)
+                // ...
+            })
+            .catch((error) => {
+                // const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(errorMessage);
+                reject(errorMessage);
+            });
+    })
+
+}
+
+const getDocument = async (documentPath: string) => {
+    const docRef = doc(stocksEyesStore, documentPath);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+        // console.log("Document data:", docSnap.data());
+        return docSnap.data();
+    } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document! " + documentPath);
+        throw new Error("Document not found for path : " + documentPath)
+    }
+}
+
+export const initialiseStocksEyes = async (apiKey: any, env: StocksEyesEnvironment = StocksEyesEnvironment.PRODUCTION) => {
     if (stocksEyesStore) return;
+    if(env == StocksEyesEnvironment.DEV) {
+        // @ts-ignore
+        window.self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+    }
     const config = JSON.parse(atob(apiKey));
     stocksEyesConfig = getStocksEyesConfig(config);
     stocksEyesApp = initializeApp(stocksEyesConfig);
     stocksEyesStore = getFirestore(stocksEyesApp)
     analytics = getAnalytics(stocksEyesApp);
-    const auth = getAuth();
     initializeAppCheck(stocksEyesApp, {
-        // provider: new ReCaptchaV3Provider("6LfkFLwnAAAAAILiEbF61R_lGTho8zp-rbRZNx0f"),
-        provider: new ReCaptchaV3Provider("6Ldsar8nAAAAAFv3-SffIOVhP-OEfnATcykrmgaD"),
+        provider: new ReCaptchaV3Provider(stocksEyesConfig.recaptchaClientKey),
         isTokenAutoRefreshEnabled: true
     });
-    await signInAnonymously(auth)
+    const authData = await getDocument(`apps/${stocksEyesConfig.appId}/config/auth`)
+    await signIn(authData.email as string, authData.password as string);
 }
 
 export const addSubscription = async (instrumentTokens: string[], retries = 0) => {

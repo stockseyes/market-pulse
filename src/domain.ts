@@ -79,3 +79,8 @@ export interface Unsubscribe {
     /** Removes the listener when invoked. */
     (): void;
 }
+
+export enum StocksEyesEnvironment {
+    DEV = "DEV",
+    PRODUCTION = "PRODUCTION"
+}
