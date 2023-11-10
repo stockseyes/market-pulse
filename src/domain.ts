@@ -37,6 +37,11 @@ interface DepthData {
     sell?: Depth[];
 }
 
+export interface SearchInstrumentsResponse {
+    instruments: Instrument[],
+    totalCount: number
+}
+
 
 export interface Instrument {
     instrument_token: string;
