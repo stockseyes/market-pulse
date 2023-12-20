@@ -16,7 +16,9 @@ export enum Fields {
     OI_DAY_HIGH = "oi_day_high",
     OI_DAY_LOW = "oi_day_low",
     DEPTH = "depth",
-    TRADING_SYMBOL = "trading_symbol"
+    TRADING_SYMBOL = "trading_symbol",
+    PREVIOUS_PRICE = "previous_price",
+    PREVIOUS_DEPTH = "previous_depth"
 }
 
 interface OHLCData {
@@ -32,7 +34,7 @@ interface Depth {
     orders: number;
 }
 
-interface DepthData {
+export interface DepthData {
     buy?: Depth[];
     sell?: Depth[];
 }
@@ -77,7 +79,9 @@ export interface MarketData {
     oi_day_high?: number;
     oi_day_low?: number;
     depth?: DepthData;
-    trading_symbol: string
+    trading_symbol: string;
+    previous_price?: number;
+    previous_depth?: DepthData
 }
 
 export interface Unsubscribe {

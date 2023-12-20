@@ -53,6 +53,10 @@ export interface SearchInstrumentsRequest {
 
 export interface SearchInstrumentsPatternRequest {
     tradingsymbol?: string,
+    expiryRange?: {
+        low: Date,
+        high: Date
+    }
 }
 
 export interface PaginationDetails {
