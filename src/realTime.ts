@@ -1,5 +1,5 @@
 import {addSubscription, initialiseStocksEyes, stocksEyesStore} from "./store";
-import {Fields, MarketData, StocksEyesEnvironment, Unsubscribe} from "./domain";
+import {Fields, MarketData, StocksEyesEnvironment, Unsubscribe} from "@stockseyes/market-domain";
 import {collection, onSnapshot, query, where} from "firebase/firestore";
 import {sendTimelyHeartbeat} from "./heartBeat";
 import {sendAnalyticsEvent} from "./analytics";

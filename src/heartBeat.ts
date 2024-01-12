@@ -1,9 +1,8 @@
 import {doc, getDoc, setDoc} from "firebase/firestore";
 import {stocksEyesConfig, stocksEyesStore} from "./store";
-import {MarketData} from "./domain";
+import {heartBeatConfigInterface, MarketData} from "@stockseyes/market-domain";
 import {sleep} from "./utils";
 
-interface heartBeatConfigInterface {timeInterval: number}
 let heartBeatConfig: heartBeatConfigInterface;
 let lastHeartBeat: {[key: string]: number} = {};
 
