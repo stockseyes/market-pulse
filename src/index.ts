@@ -1,4 +1,4 @@
 export * from "./server"
-export * from "./domain"
+export * from "@stockseyes/market-domain"
 export * from "./instruments"
 

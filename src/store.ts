@@ -4,7 +4,7 @@ import {getAnalytics} from "firebase/analytics";
 import {sleep} from "./utils";
 import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
 import {initializeAppCheck, ReCaptchaV3Provider} from "firebase/app-check";
-import {StocksEyesEnvironment} from "./domain";
+import {StocksEyesEnvironment} from "@stockseyes/market-domain";
 
 let stocksEyesStore: any;
 let stocksEyesApp
