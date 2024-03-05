@@ -19,7 +19,8 @@ const getNearValue = (num: number, percent: number) => {
     return +((num + (num%2 == 0 ? 1: -1) * change).toFixed(2));
 }
 
-export const subscribeRealTimeData = async (instrumentTokens: string[], fieldsRequired:Fields[] , callback: (data: MarketData[])=>void): Promise<Unsubscribe> => {
+
+const subscribeRealTimeDataHelper = async (instrumentTokens: string[], fieldsRequired:Fields[] , callback: (data: MarketData[])=>void): Promise<Unsubscribe> => {
     addSubscription(instrumentTokens);
     const q = query(collection(stocksEyesStore, "latestQuoteByIT"), where("instrument_token", "in", instrumentTokens));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -57,6 +58,18 @@ export const subscribeRealTimeData = async (instrumentTokens: string[], fieldsRe
     });
 
     return unsubscribe;
+}
+
+export const subscribeRealTimeData = async (instrumentTokens: string[], fieldsRequired:Fields[] , callback: (data: MarketData[])=>void): Promise<Unsubscribe> => {
+    if(!instrumentTokens || !Array.isArray(instrumentTokens)) throw new Error("Invalid input for instrument tokens");
+    const unsubscribePromises: Promise<Unsubscribe>[] = []
+    for(let i=0;i<instrumentTokens.length;i++) {
+        unsubscribePromises.push(subscribeRealTimeDataHelper(instrumentTokens, fieldsRequired, callback))
+    }
+    const unsubscribeFunctions: Unsubscribe[] = await Promise.all(unsubscribePromises);
+    return ()=>{
+        unsubscribeFunctions.forEach(unsubscribeFunction => {unsubscribeFunction()})
+    };
 }
 
 export const initialiseAndSubscribeRealTimeData = async (environment: StocksEyesEnvironment, apiKey:any, instrumentTokens: string[], fieldsRequired:Fields[] , callback: (data: MarketData[])=>void): Promise<Unsubscribe> => {
