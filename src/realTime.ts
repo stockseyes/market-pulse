@@ -4,6 +4,7 @@ import {collection, onSnapshot, query, where} from "firebase/firestore";
 import {sendTimelyHeartbeat} from "./heartBeat";
 import {sendAnalyticsEvent} from "./analytics";
 import {EventName} from "./enums/eventName";
+const batchSize: number = 30;
 
 const previousMarketData: {
     [key: string]: MarketData
@@ -63,8 +64,8 @@ const subscribeRealTimeDataHelper = async (instrumentTokens: string[], fieldsReq
 export const subscribeRealTimeData = async (instrumentTokens: string[], fieldsRequired:Fields[] , callback: (data: MarketData[])=>void): Promise<Unsubscribe> => {
     if(!instrumentTokens || !Array.isArray(instrumentTokens)) throw new Error("Invalid input for instrument tokens");
     const unsubscribePromises: Promise<Unsubscribe>[] = []
-    for(let i=0;i<instrumentTokens.length;i++) {
-        unsubscribePromises.push(subscribeRealTimeDataHelper(instrumentTokens, fieldsRequired, callback))
+    for(let i=0;i<instrumentTokens.length;i+=batchSize) {
+        unsubscribePromises.push(subscribeRealTimeDataHelper(instrumentTokens.slice(i,i+batchSize), fieldsRequired, callback))
     }
     const unsubscribeFunctions: Unsubscribe[] = await Promise.all(unsubscribePromises);
     return ()=>{
