@@ -1,0 +1,1 @@
+export const URLKey = "aHR0cHM6Ly9zdG9ja3NleWVzY2xvdWRydW4tbjJlcm1vdmk2cS1lbC5hLnJ1bi5hcHA="
