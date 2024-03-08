@@ -1,9 +1,11 @@
-import {makePostRequest} from "./requests";
+import {makeGetRequest, makePostRequest} from "./requests";
 import {
     PaginationDetails,
     SearchInstrumentsPatternRequest,
     SearchInstrumentsRequest,
-    SearchInstrumentsResponse
+    SearchInstrumentsResponse,
+    futureListResponse,
+    optionListResponse
 } from "@stockseyes/market-domain";
 import {sendAnalyticsEvent} from "./analytics";
 import {EventName} from "./enums/eventName";
@@ -18,4 +20,14 @@ export const searchInstruments = async (searchInstrumentsRequest: SearchInstrume
     });
     sendAnalyticsEvent(EventName.SEARCH_INSTRUMENT);
     return response as SearchInstrumentsResponse;
+}
+
+export const getOptions = async(tradingSymbol: string): Promise<optionListResponse> => {
+    sendAnalyticsEvent(EventName.OPTION_LIST)
+    return await makeGetRequest(atob(URLKey) + "/getOptionListByTradingSymbol", {tradingSymbol})
+}
+
+export const getFutures = async(tradingSymbol: string): Promise<futureListResponse> => {
+    sendAnalyticsEvent(EventName.FUTURE_LIST)
+    return await makeGetRequest(atob(URLKey) + "/getFutureListByTradingSymbol", {tradingSymbol})
 }
