@@ -1,5 +1,5 @@
 {
-  "version": "2.14.0",
+  "version": "2.16.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -52,7 +52,7 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "@stockseyes/market-domain": "0.1.0",
+    "@stockseyes/market-domain": "0.1.5",
     "firebase": "^10.1.0"
   }
 }
