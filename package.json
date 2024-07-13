@@ -1,5 +1,5 @@
 {
-  "version": "2.17.0",
+  "version": "2.22.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -17,7 +17,8 @@
     "lint": "tsdx lint",
     "prepare": "tsdx build",
     "size": "size-limit",
-    "analyze": "size-limit --why"
+    "analyze": "size-limit --why",
+    "publish-script": "npm publish --access=public"
   },
   "husky": {
     "hooks": {
@@ -52,7 +53,7 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "@stockseyes/market-domain": "0.1.5",
+    "@stockseyes/market-domain": "^0.1.6",
     "firebase": "^10.1.0"
   }
 }
