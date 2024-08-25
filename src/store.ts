@@ -10,6 +10,7 @@ let stocksEyesStore: any;
 let stocksEyesApp
 let stocksEyesConfig: any
 let analytics: any
+let apiKeyGlobal: string
 
 const getStocksEyesConfig = (config: any): any => {
     if (!config || !config.apiKey) {
@@ -56,6 +57,7 @@ const getDocument = async (documentPath: string) => {
 }
 
 export const initialiseStocksEyes = async (apiKey: any, env: StocksEyesEnvironment = StocksEyesEnvironment.PRODUCTION) => {
+    apiKeyGlobal = apiKey
     if (stocksEyesStore) return;
     if(env == StocksEyesEnvironment.DEV) {
         // @ts-ignore
@@ -89,6 +91,13 @@ export const addSubscription = async (instrumentTokens: string[], retries = 0) =
         await addSubscription(instrumentTokens, retries + 1);
     }
 
+}
+
+export const getAPIKey = () => {
+    if(apiKeyGlobal) {
+        return apiKeyGlobal
+    }
+    throw new Error("API key not found. Please initialise stocksEyes with api key")
 }
 
 // export const ticker = (instrumentTokens: string[] , fieldsRequired: Fields[] , callback: (data: MarketData[])=>void): Unsubscribe => {

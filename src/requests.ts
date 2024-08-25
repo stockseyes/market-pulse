@@ -1,9 +1,12 @@
+import {getAPIKey} from "./store";
+
 export const makePostRequest = (url: string, body: any) => {
     return new Promise((resolve, reject) => {
         fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': getAPIKey()
             },
             body: JSON.stringify(body),
         })
@@ -29,6 +32,7 @@ export const makeGetRequest = (url: string, queryParams: Record<string, string>)
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': getAPIKey()
             },
         })
             .then(response => {
